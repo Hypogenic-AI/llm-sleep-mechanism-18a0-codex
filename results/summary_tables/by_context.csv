@@ -1,0 +1,4 @@
+context_length,n,bedtime_nudges,bedtime_nudge_rate,bedtime_nudge_ci_low,bedtime_nudge_ci_high,keyword_nudges,keyword_nudge_rate,keyword_nudge_ci_low,keyword_nudge_ci_high,hard_disengagement_rate,answered_request_rate,mean_anxious_tone
+long,36,1,0.027777777777777776,0.0,0.08333333333333333,1,0.027777777777777776,0.0,0.08333333333333333,0.0,1.0,0.027777777777777776
+medium,36,1,0.027777777777777776,0.0,0.08333333333333333,1,0.027777777777777776,0.0,0.08333333333333333,0.0,1.0,0.027777777777777776
+short,36,0,0.0,0.0,0.0,0,0.0,0.0,0.0,0.0,1.0,0.0

@@ -1,0 +1,28 @@
+\section{Methodology}
+\label{sec:methodology}
+
+\input{figures/method_overview}
+
+\para{Target behavior.}
+We study assistant-initiated \bedtimenudges: responses that recommend sleep, rest, winding down, calling it a night, or taking a break when the user has asked for safe help. The primary label counts both soft bedtime nudges and hard bedtime disengagements. We separately track whether the assistant answered the request, whether the nudge replaced the answer, and whether the response sounded anxious or overprotective.
+
+\para{Design goal.}
+The benchmark tests whether late-night and prolonged-conversation cues trigger a broad response pattern or whether nudges depend on perceived user state. We therefore keep the final tasks safe and concrete, include the same late-night cue in every final user message, and vary profile, context length, urgency, paraphrase, and model.
+
+\input{tables/dataset_summary}
+\input{tables/design}
+
+\para{Synthetic prompt construction.}
+The synthetic benchmark contains 54 prompt cases, each run on two generation models for 108 total generations. The profile factor has three levels. The neutral profile describes a calm, task-focused adult who does not need wellbeing advice unless directly relevant. The fatigued profile describes a tired adult trying to finish safe tasks before stopping for the night. The dependent profile includes vulnerable attachment cues, such as feeling less alone in the chat and feeling uneasy about stopping, but excludes self-harm content. Context length has three levels: short with no prior task pairs, medium with four prior task pairs, and long with twelve prior task pairs. Task urgency has two levels, low and urgent, with three paraphrases per urgency level.
+
+\para{Models and generation settings.}
+We used two OpenAI generation models: \gptfivemini (\texttt{gpt-5.4-mini-2026-03-17}) and \gptfourmini (\texttt{gpt-4.1-mini-2025-04-14}), with 54 calls per model. We used the \responsesapi with a 420-token generation cap. The judge model was \gptfourmini with a 300-token cap. Temperature was set to 0 where supported. The random seed was 42 for prompt ordering, bootstrapping, and analysis.
+
+\para{Labeling.}
+We label each response in two ways. The keyword baseline searches for explicit sleep and rest phrases, including ``go to sleep,'' ``go to bed,'' ``get some rest,'' ``rest well,'' ``wind down,'' ``call it a night,'' and ``take a break.'' The LLM judge assigns one category from \nonudge, \softnudge, \harddisengagement, ordinary sleep-topic answer, refusal, or crisis escalation. It also records whether the assistant answered the request and rates anxious or overprotective tone from 0 to 3. The primary metric is the assistant-initiated bedtime-nudge rate, defined as the fraction of responses labeled as either \softnudge or \harddisengagement.
+
+\para{Statistical analysis.}
+The preregistered plan used logistic regression when event counts permitted, otherwise contingency tests. Because there were only two positive events and 106 negative events, logistic regression was skipped as unstable. We report Fisher exact tests for the planned comparisons and apply Holm correction across the main family of tests. We also report bootstrap 95\% confidence intervals for rate estimates, following the cached analysis outputs.
+
+\para{WildChat audit.}
+The observational audit uses a bounded \wildchat sample collected by sleep-phrase matching. The local sample contains 25 conversations selected from 14,782 scanned conversations. We label these conversations with the same judge taxonomy, but we do not use them for causal inference because the sample is selected on phrase matches and includes ordinary sleep-related requests.

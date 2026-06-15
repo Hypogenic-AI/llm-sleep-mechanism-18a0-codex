@@ -1,0 +1,219 @@
+{
+  "n_synthetic_outputs": 108,
+  "models": [
+    "gpt-4.1-mini",
+    "gpt-5.4-mini"
+  ],
+  "overall": {
+    "bedtime_nudges": 2,
+    "bedtime_nudge_rate": 0.018518518518518517,
+    "keyword_bedtime_nudge_rate": 0.018518518518518517,
+    "hard_disengagement_rate": 0.0,
+    "answered_request_rate": 1.0,
+    "mean_anxious_tone": 0.018518518518518517
+  },
+  "token_usage_generation_only": {
+    "input_tokens": 40620.0,
+    "output_tokens": 15260.0,
+    "total_tokens": 55880.0
+  },
+  "main_pairwise_tests": [
+    {
+      "comparison": "fatigued vs neutral",
+      "variable": "profile",
+      "level_a": "fatigued",
+      "level_b": "neutral",
+      "n_a": 36,
+      "n_b": 36,
+      "rate_a": 0.05555555555555555,
+      "rate_b": 0.0,
+      "risk_difference_a_minus_b": 0.05555555555555555,
+      "risk_difference_ci_low": 0.0,
+      "risk_difference_ci_high": 0.1388888888888889,
+      "odds_ratio": Infinity,
+      "p_value": 0.49295774647887336,
+      "test": "Fisher exact",
+      "table": [
+        [
+          2,
+          34
+        ],
+        [
+          0,
+          36
+        ]
+      ],
+      "holm_p_value": 1.0,
+      "holm_significant_alpha_0_05": false
+    },
+    {
+      "comparison": "dependent vs neutral",
+      "variable": "profile",
+      "level_a": "dependent",
+      "level_b": "neutral",
+      "n_a": 36,
+      "n_b": 36,
+      "rate_a": 0.0,
+      "rate_b": 0.0,
+      "risk_difference_a_minus_b": 0.0,
+      "risk_difference_ci_low": 0.0,
+      "risk_difference_ci_high": 0.0,
+      "odds_ratio": Infinity,
+      "p_value": 1.0,
+      "test": "Fisher exact",
+      "table": [
+        [
+          0,
+          36
+        ],
+        [
+          0,
+          36
+        ]
+      ],
+      "holm_p_value": 1.0,
+      "holm_significant_alpha_0_05": false
+    },
+    {
+      "comparison": "long context vs short",
+      "variable": "context_length",
+      "level_a": "long",
+      "level_b": "short",
+      "n_a": 36,
+      "n_b": 36,
+      "rate_a": 0.027777777777777776,
+      "rate_b": 0.0,
+      "risk_difference_a_minus_b": 0.027777777777777776,
+      "risk_difference_ci_low": 0.0,
+      "risk_difference_ci_high": 0.08333333333333333,
+      "odds_ratio": Infinity,
+      "p_value": 1.0,
+      "test": "Fisher exact",
+      "table": [
+        [
+          1,
+          35
+        ],
+        [
+          0,
+          36
+        ]
+      ],
+      "holm_p_value": 1.0,
+      "holm_significant_alpha_0_05": false
+    },
+    {
+      "comparison": "medium context vs short",
+      "variable": "context_length",
+      "level_a": "medium",
+      "level_b": "short",
+      "n_a": 36,
+      "n_b": 36,
+      "rate_a": 0.027777777777777776,
+      "rate_b": 0.0,
+      "risk_difference_a_minus_b": 0.027777777777777776,
+      "risk_difference_ci_low": 0.0,
+      "risk_difference_ci_high": 0.08333333333333333,
+      "odds_ratio": Infinity,
+      "p_value": 1.0,
+      "test": "Fisher exact",
+      "table": [
+        [
+          1,
+          35
+        ],
+        [
+          0,
+          36
+        ]
+      ],
+      "holm_p_value": 1.0,
+      "holm_significant_alpha_0_05": false
+    },
+    {
+      "comparison": "urgent task vs low urgency",
+      "variable": "urgency",
+      "level_a": "urgent",
+      "level_b": "low",
+      "n_a": 54,
+      "n_b": 54,
+      "rate_a": 0.018518518518518517,
+      "rate_b": 0.018518518518518517,
+      "risk_difference_a_minus_b": 0.0,
+      "risk_difference_ci_low": -0.05555555555555555,
+      "risk_difference_ci_high": 0.05555555555555555,
+      "odds_ratio": 1.0,
+      "p_value": 1.0,
+      "test": "Fisher exact",
+      "table": [
+        [
+          1,
+          53
+        ],
+        [
+          1,
+          53
+        ]
+      ],
+      "holm_p_value": 1.0,
+      "holm_significant_alpha_0_05": false
+    },
+    {
+      "comparison": "GPT-5.4-mini vs GPT-4.1-mini",
+      "variable": "model_family",
+      "level_a": "gpt-5.4-mini",
+      "level_b": "gpt-4.1-mini",
+      "n_a": 54,
+      "n_b": 54,
+      "rate_a": 0.0,
+      "rate_b": 0.037037037037037035,
+      "risk_difference_a_minus_b": -0.037037037037037035,
+      "risk_difference_ci_low": -0.09259259259259259,
+      "risk_difference_ci_high": 0.0,
+      "odds_ratio": 0.0,
+      "p_value": 0.4953271028037383,
+      "test": "Fisher exact",
+      "table": [
+        [
+          0,
+          54
+        ],
+        [
+          2,
+          52
+        ]
+      ],
+      "holm_p_value": 1.0,
+      "holm_significant_alpha_0_05": false
+    }
+  ],
+  "logistic_regression": {
+    "status": "skipped",
+    "reason": "Too few positive or negative events for stable logistic regression.",
+    "positive_events": 2,
+    "negative_events": 106
+  },
+  "wildchat_audit": {
+    "n": 25,
+    "user_sleep_keyword_rate": 0.2,
+    "judge_bedtime_nudge_rate": 0.24,
+    "assistant_initiated_rate": 0.36,
+    "hard_disengagement_rate": 0.0,
+    "category_counts": {
+      "no_nudge": 19,
+      "soft_bedtime_nudge": 5,
+      "ordinary_sleep_topic_answer": 1
+    }
+  },
+  "output_files": {
+    "synthetic_labeled_outputs": "results/summary_tables/synthetic_labeled_outputs.csv",
+    "pairwise_tests": "results/summary_tables/pairwise_tests.csv",
+    "figures": [
+      "figures/bedtime_nudge_by_profile.png",
+      "figures/bedtime_nudge_by_context_profile.png",
+      "figures/bedtime_nudge_heatmap.png",
+      "figures/anxious_tone_by_profile_context.png"
+    ],
+    "examples": "results/error_analysis_examples.md"
+  }
+}

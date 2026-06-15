@@ -1,0 +1,27 @@
+{
+  "success": true,
+  "stages": {
+    "resource_finder": {
+      "success": true,
+      "completion_marker": "/workspaces/llm-sleep-mechanism-18a0-codex/.resource_finder_complete",
+      "outputs": {
+        "literature_review": "/workspaces/llm-sleep-mechanism-18a0-codex/literature_review.md",
+        "resources_catalog": "/workspaces/llm-sleep-mechanism-18a0-codex/resources.md",
+        "papers_dir": "/workspaces/llm-sleep-mechanism-18a0-codex/papers",
+        "datasets_dir": "/workspaces/llm-sleep-mechanism-18a0-codex/datasets",
+        "code_dir": "/workspaces/llm-sleep-mechanism-18a0-codex/code"
+      },
+      "log_file": "/workspaces/llm-sleep-mechanism-18a0-codex/logs/resource_finder_codex.log",
+      "transcript_file": "/workspaces/llm-sleep-mechanism-18a0-codex/logs/resource_finder_codex_transcript.jsonl",
+      "elapsed_time": 1032.1218633651733
+    },
+    "experiment_runner": {
+      "success": true,
+      "return_code": 0,
+      "elapsed_time": 1793.3327388763428,
+      "log_file": "/workspaces/llm-sleep-mechanism-18a0-codex/logs/execution_codex.log",
+      "transcript_file": "/workspaces/llm-sleep-mechanism-18a0-codex/logs/execution_codex_transcript.jsonl"
+    }
+  },
+  "work_dir": "/workspaces/llm-sleep-mechanism-18a0-codex"
+}

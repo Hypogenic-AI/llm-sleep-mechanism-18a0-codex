@@ -1,0 +1,7 @@
+comparison,variable,level_a,level_b,n_a,n_b,rate_a,rate_b,risk_difference_a_minus_b,risk_difference_ci_low,risk_difference_ci_high,odds_ratio,p_value,test,table,holm_p_value,holm_significant_alpha_0_05
+fatigued vs neutral,profile,fatigued,neutral,36,36,0.05555555555555555,0.0,0.05555555555555555,0.0,0.1388888888888889,inf,0.49295774647887336,Fisher exact,"[[2, 34], [0, 36]]",1.0,False
+dependent vs neutral,profile,dependent,neutral,36,36,0.0,0.0,0.0,0.0,0.0,inf,1.0,Fisher exact,"[[0, 36], [0, 36]]",1.0,False
+long context vs short,context_length,long,short,36,36,0.027777777777777776,0.0,0.027777777777777776,0.0,0.08333333333333333,inf,1.0,Fisher exact,"[[1, 35], [0, 36]]",1.0,False
+medium context vs short,context_length,medium,short,36,36,0.027777777777777776,0.0,0.027777777777777776,0.0,0.08333333333333333,inf,1.0,Fisher exact,"[[1, 35], [0, 36]]",1.0,False
+urgent task vs low urgency,urgency,urgent,low,54,54,0.018518518518518517,0.018518518518518517,0.0,-0.05555555555555555,0.05555555555555555,1.0,1.0,Fisher exact,"[[1, 53], [1, 53]]",1.0,False
+GPT-5.4-mini vs GPT-4.1-mini,model_family,gpt-5.4-mini,gpt-4.1-mini,54,54,0.0,0.037037037037037035,-0.037037037037037035,-0.09259259259259259,0.0,0.0,0.4953271028037383,Fisher exact,"[[0, 54], [2, 52]]",1.0,False

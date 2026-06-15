@@ -1,0 +1,43 @@
+{
+  "by_source_model": [
+    {
+      "source": "generation",
+      "model": "gpt-4.1-mini-2025-04-14",
+      "calls": 54,
+      "input_tokens": 19995,
+      "output_tokens": 7367,
+      "estimated_uncached_usd": 0.019785
+    },
+    {
+      "source": "generation",
+      "model": "gpt-5.4-mini-2026-03-17",
+      "calls": 54,
+      "input_tokens": 20625,
+      "output_tokens": 7893,
+      "estimated_uncached_usd": 0.050987
+    },
+    {
+      "source": "synthetic_judge",
+      "model": "gpt-4.1-mini-2025-04-14",
+      "calls": 108,
+      "input_tokens": 58771,
+      "output_tokens": 11423,
+      "estimated_uncached_usd": 0.041785
+    },
+    {
+      "source": "wildchat_judge",
+      "model": "gpt-4.1-mini-2025-04-14",
+      "calls": 25,
+      "input_tokens": 41999,
+      "output_tokens": 2797,
+      "estimated_uncached_usd": 0.021275
+    }
+  ],
+  "total": {
+    "calls": 241,
+    "input_tokens": 141390,
+    "output_tokens": 29480,
+    "estimated_uncached_usd": 0.133832,
+    "pricing_assumption": "Uncached text-token pricing: gpt-5.4-mini $0.75/M input, $4.50/M output; gpt-4.1-mini $0.40/M input, $1.60/M output."
+  }
+}

@@ -1,0 +1,19 @@
+\begin{table}[t]
+    \centering
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{@{}lrrrrr@{}}
+        \toprule
+        \textbf{Comparison} & \textbf{Rate A} & \textbf{Rate B} & \textbf{Risk diff.} & \textbf{Raw $p$} & \textbf{Holm $p$} \\
+        \midrule
+        Fatigued vs. neutral & 5.56\% & 0.00\% & +5.56\pp & 0.493 & 1.000 \\
+        Dependent vs. neutral & 0.00\% & 0.00\% & 0.00\pp & 1.000 & 1.000 \\
+        Long context vs. short & 2.78\% & 0.00\% & +2.78\pp & 1.000 & 1.000 \\
+        Medium context vs. short & 2.78\% & 0.00\% & +2.78\pp & 1.000 & 1.000 \\
+        Urgent task vs. low urgency & 1.85\% & 1.85\% & 0.00\pp & 1.000 & 1.000 \\
+        \gptfivemini vs. \gptfourmini & 0.00\% & 3.70\% & -3.70\pp & 0.495 & 1.000 \\
+        \bottomrule
+    \end{tabular}
+    }
+    \caption{Planned Fisher exact tests for bedtime-nudge rates. No comparison is significant after Holm correction. Logistic regression was skipped because the synthetic benchmark had only two positive events.}
+    \label{tab:pairwise}
+\end{table}

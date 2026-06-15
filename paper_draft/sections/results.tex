@@ -1,0 +1,56 @@
+\section{Results}
+\label{sec:results}
+
+\input{tables/main_results}
+
+\para{Bedtime nudges are rare.}
+Across 108 synthetic model outputs, only 2 were labeled as \bedtimenudges, for an overall rate of 1.85\%. The keyword baseline found the same two positives, giving the same 1.85\% rate. We observed no hard bedtime disengagements, no task refusals, and a 100.00\% answered-request rate. The mean anxious or overprotective tone score was 0.019 on a 0--3 scale.
+
+\para{Nudges are restricted to one model-profile slice.}
+\Figref{fig:profile_context} shows the main profile and context slices. The neutral and dependent profiles each had 0/36 nudges. The fatigued profile had 2/36 nudges (5.56\%, bootstrap 95\% CI [0.00\%, 13.89\%]). Both positive cases came from \gptfourmini, which had a 2/54 nudge rate (3.70\%, CI [0.00\%, 9.26\%]); \gptfivemini had 0/54 nudges. In the crossed model-profile table, the only nonzero cell was \gptfourmini on the fatigued profile, with 2/18 nudges (11.11\%).
+
+\begin{figure}[t]
+    \centering
+    \begin{minipage}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/bedtime_nudge_by_profile.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/bedtime_nudge_by_context_profile.png}
+    \end{minipage}
+    \caption{Bedtime-nudge rates by user profile and context length. \figleft The only profile with positive synthetic cases is the fatigued profile. \figright The two positive cases appear in medium and long contexts, but only within the fatigued profile; short contexts, neutral profiles, and dependent profiles all have zero nudges.}
+    \label{fig:profile_context}
+\end{figure}
+
+\para{Longer context alone does not explain the behavior.}
+The context-length slice was short 0/36, medium 1/36, and long 1/36. If a generic prolonged-chat cue were sufficient, we would expect a broader increase in medium or long contexts across profiles. Instead, the nonzero context cells coincide with the fatigued profile and \gptfourmini.
+
+\begin{figure}[t]
+    \centering
+    \begin{minipage}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/bedtime_nudge_heatmap.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/anxious_tone_by_profile_context.png}
+    \end{minipage}
+    \caption{Interaction heatmaps for bedtime nudges and anxious tone. Bedtime nudges are isolated to fatigued medium and fatigued long cells. Judge-rated anxious or overprotective tone is also near zero, with the only nonzero average coming from the two soft-nudge examples.}
+    \label{fig:heatmaps}
+\end{figure}
+
+\input{tables/pairwise_tests}
+
+\para{No planned comparison is statistically significant.}
+All planned Fisher exact tests have Holm-corrected p-values of 1.000. The largest observed risk difference is fatigued versus neutral at +5.56\pp, but the raw p-value is 0.493 and the corrected p-value is 1.000. The model comparison, \gptfivemini versus \gptfourmini, has a risk difference of -3.70\pp and a raw p-value of 0.495. These results are best read as no evidence of a strong effect in this design, not as proof that bedtime nudges cannot occur.
+
+\input{tables/wildchat_audit}
+
+\para{Phrase matching overstates the phenomenon.}
+The bounded \wildchat audit contains 25 sleep-phrase matches. The judge labeled 19 as \nonudge, 5 as \softnudge, 1 as an ordinary sleep-topic answer, and 0 as \harddisengagement. This supports the same caution as the synthetic study: sleep phrases are not enough to identify assistant-initiated conversation-ending behavior.
+
+\para{The positive examples are answer-plus-nudge cases.}
+Both synthetic positives were benign soft closings. In one case, the assistant drafted the requested client email and then added ``Rest well when you're done!'' In the other, it gave the requested blog-title options and added the same closing. Neither response refused the task, escalated, or asked the user to stop immediately.

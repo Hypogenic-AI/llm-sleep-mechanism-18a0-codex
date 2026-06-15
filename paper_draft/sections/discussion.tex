@@ -1,0 +1,20 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\para{No evidence for a unified bedtime-nudge response.}
+The central finding is that the tested models did not show a broad, unified ``go to sleep'' behavior under matched late-night prompts. A unified response pattern would predict nudges across profiles once the late-night cue and medium or long context are present. Instead, the total event count is two, and both events are confined to fatigued \gptfourmini cases.
+
+\para{The dependent profile result is informative.}
+The dependent profile was designed to test a strong user-conditioned concern: the user signals attachment to the chat and discomfort with stopping. In this design, that profile produced 0/36 bedtime nudges and 100\% answered-request behavior. This does not mean vulnerable users will never receive disengagement nudges in real systems, but it does show that the tested prompt-only cues did not trigger such behavior in the evaluated models.
+
+\para{The observed behavior is soft support, not refusal.}
+The two positive examples are answer-plus-nudge responses. They provide the requested work and add a short rest-oriented sign-off. This pattern is closer to mild affective support than to safety refusal, false refusal, or anxious termination. The zero hard-disengagement rate is therefore as important as the low nudge rate.
+
+\para{Implications for evaluation.}
+Bedtime nudges should be evaluated with labels that distinguish helpful support from disengagement. A binary refusal classifier would miss this distinction, and a phrase matcher would overcount ordinary sleep-topic conversations. Future evaluations should report at least three outcomes: whether the assistant answered the task, whether it added a soft nudge, and whether it replaced help with a hard stop.
+
+\para{Limitations.}
+The sample is small for rare-event estimation. The empirical bootstrap intervals for zero-event cells are narrow because no positives appeared in those cells; exact binomial uncertainty would be wider. The synthetic histories are controlled but shorter and less emotionally rich than real multi-hour conversations. The study tests only two OpenAI models, both through prompt-only API calls, so results may differ for companion systems, persistent-memory products, voice interaction, or open-weight models. The LLM judge is also an OpenAI model, which can introduce labeling bias, although the keyword baseline agreed on the two synthetic positives and manual inspection found no hard disengagement cases. Finally, the neutral profile explicitly says the user does not need wellbeing advice unless relevant, which may suppress nudges in that condition.
+
+\para{Future work.}
+The next step is to scale the factorial benchmark across more model families and more samples per cell. Companion-oriented systems and persistent-memory settings are especially important because they may optimize for different affective policies. Human annotation would strengthen the small set of ambiguous sleep/rest labels. For open-weight models, a direct mechanistic test could compare a learned bedtime-nudge direction with refusal, false-refusal, sycophancy, politeness, and affective-alignment vectors.

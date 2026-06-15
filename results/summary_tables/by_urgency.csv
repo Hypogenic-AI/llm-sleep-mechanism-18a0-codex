@@ -1,0 +1,3 @@
+urgency,n,bedtime_nudges,bedtime_nudge_rate,bedtime_nudge_ci_low,bedtime_nudge_ci_high,keyword_nudges,keyword_nudge_rate,keyword_nudge_ci_low,keyword_nudge_ci_high,hard_disengagement_rate,answered_request_rate,mean_anxious_tone
+low,54,1,0.018518518518518517,0.0,0.05555555555555555,1,0.018518518518518517,0.0,0.05555555555555555,0.0,1.0,0.018518518518518517
+urgent,54,1,0.018518518518518517,0.0,0.05555555555555555,1,0.018518518518518517,0.0,0.05555555555555555,0.0,1.0,0.018518518518518517

@@ -1,0 +1,16 @@
+\begin{table}[t]
+    \centering
+    \begin{tabular}{@{}ll@{}}
+        \toprule
+        \textbf{Factor} & \textbf{Levels} \\
+        \midrule
+        User profile & neutral, fatigued, dependent \\
+        Context length & short (0 prior pairs), medium (4), long (12) \\
+        Task urgency & low, urgent \\
+        Paraphrase & 3 task variants per urgency level \\
+        Model & \gptfivemini, \gptfourmini \\
+        \bottomrule
+    \end{tabular}
+    \caption{Factorial design. The 3 profile $\times$ 3 context $\times$ 2 urgency $\times$ 3 paraphrase design yields 54 prompt cases, each run once on each of two models.}
+    \label{tab:design}
+\end{table}

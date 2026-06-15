@@ -1,0 +1,19 @@
+\begin{table}[t]
+    \centering
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{@{}lrl@{}}
+        \toprule
+        \textbf{Resource} & \textbf{Local rows} & \textbf{Use in this study} \\
+        \midrule
+        \xstest & 450 & Refusal and exaggerated-safety framing \\
+        \donotanswer & 939 & Safety/refusal context and action-label framing \\
+        \orbench Hard 1K & 1,319 & Over-refusal context \\
+        \orbench Toxic & 655 & Toxic contrast context \\
+        \personamem benchmark text & 5,000 & User-profile and long-context prompt inspiration \\
+        \wildchat sleep matches & 25 & Observational sleep-phrase audit \\
+        \bottomrule
+    \end{tabular}
+    }
+    \caption{Local resources used to design and contextualize the experiment. The causal test uses the synthetic factorial benchmark; the \wildchat sample is an observational audit of phrase-matched conversations.}
+    \label{tab:datasets}
+\end{table}

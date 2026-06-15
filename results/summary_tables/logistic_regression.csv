@@ -1,0 +1,2 @@
+status,reason,positive_events,negative_events
+skipped,Too few positive or negative events for stable logistic regression.,2,106

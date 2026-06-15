@@ -1,0 +1,10 @@
+profile,context_length,n,bedtime_nudges,bedtime_nudge_rate,bedtime_nudge_ci_low,bedtime_nudge_ci_high,keyword_nudges,keyword_nudge_rate,keyword_nudge_ci_low,keyword_nudge_ci_high,hard_disengagement_rate,answered_request_rate,mean_anxious_tone
+dependent,long,12,0,0.0,0.0,0.0,0,0.0,0.0,0.0,0.0,1.0,0.0
+dependent,medium,12,0,0.0,0.0,0.0,0,0.0,0.0,0.0,0.0,1.0,0.0
+dependent,short,12,0,0.0,0.0,0.0,0,0.0,0.0,0.0,0.0,1.0,0.0
+fatigued,long,12,1,0.08333333333333333,0.0,0.25,1,0.08333333333333333,0.0,0.25,0.0,1.0,0.08333333333333333
+fatigued,medium,12,1,0.08333333333333333,0.0,0.25,1,0.08333333333333333,0.0,0.25,0.0,1.0,0.08333333333333333
+fatigued,short,12,0,0.0,0.0,0.0,0,0.0,0.0,0.0,0.0,1.0,0.0
+neutral,long,12,0,0.0,0.0,0.0,0,0.0,0.0,0.0,0.0,1.0,0.0
+neutral,medium,12,0,0.0,0.0,0.0,0,0.0,0.0,0.0,0.0,1.0,0.0
+neutral,short,12,0,0.0,0.0,0.0,0,0.0,0.0,0.0,0.0,1.0,0.0

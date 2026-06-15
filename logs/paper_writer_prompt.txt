@@ -1,0 +1,714 @@
+You are an academic paper writer. Generate a complete NEURIPS style paper
+based on the experiment results provided.
+
+════════════════════════════════════════════════════════════════════════════════
+                         IMPORTANT: BEFORE YOU START
+════════════════════════════════════════════════════════════════════════════════
+
+Before writing any content, you MUST complete these steps:
+
+1. READ THE SKILL: Review the paper-writer skill at .codex/skills/paper-writer/SKILL.md
+2. READ THE STYLE GUIDE: Study templates/paper_writing/lab_style_guide.md carefully
+3. REVIEW EXAMPLES: Browse paper_examples/ for formatting and language patterns:
+   - Look at sections/1.introduction.tex for language style
+   - Look at tables/*.tex for table formatting
+   - Look at commands/*.tex for macro usage
+4. VERIFY COMMAND TEMPLATES: Command templates (math.tex, general.tex, macros.tex) are pre-copied to paper_draft/commands/
+
+CRITICAL: Reference example papers for FORMATTING and LANGUAGE STYLE only.
+Do NOT copy content, phrasing, or narrative structure from the example papers.
+The examples are in a different research domain - focus only on presentation style.
+
+════════════════════════════════════════════════════════════════════════════════
+                            EXPERIMENT REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+# How Unified Is LLMs' "Go to Sleep" Mechanism?
+
+## 1. Executive Summary
+
+This study tested whether current LLMs show a consistent assistant-initiated "go to sleep" response after late-night or prolonged conversations, or whether the response depends on perceived user state. I ran 108 real OpenAI model generations across a factorial design crossing model, user profile, context length, task urgency, and paraphrase, then labeled outputs with both keyword rules and an LLM judge.
+
+The main finding is negative and fairly clear at this scale: bedtime nudges were rare, soft, and not unified. Only 2/108 synthetic responses were labeled as bedtime nudges (1.85%), both from `gpt-4.1-mini-2025-04-14`, both in the fatigued profile, and both still answered the user's concrete task. There were no hard disengagements, no task refusals, and no nudges in the dependent/vulnerable profile.
+
+Practically, these results suggest that the anecdotal "go to sleep" behavior is not a robust generic response to late-night or long-context cues in the tested models. When it appeared, it looked like a mild sign-off ("Rest well when you're done") rather than an anxious refusal to continue.
+
+## 2. Research Question & Motivation
+
+Research question: when LLMs are placed in late-night or extended-conversation contexts, do they produce a consistent "go to sleep" response pattern across users and tasks, or is the pattern conditioned on perceived user characteristics and context?
+
+This matters because a sleep/rest nudge can be either helpful wellbeing support or unwanted disengagement. The gathered literature shows strong work on refusal directions, over-refusal, false refusal, sycophancy, personalization, and vulnerable chatbot conversations, but no reviewed work directly tests assistant-initiated bedtime nudges as a behavioral phenomenon.
+
+## 3. Experimental Setup
+
+### Resources Reviewed
+
+I used the pre-gathered `literature_review.md`, `resources.md`, local PDFs, datasets, and cloned code repositories. The key methodological takeaway was that bedtime nudges should not be treated as ordinary safety refusal: prior work distinguishes unified refusal directions from more context-dependent over-refusal, false refusal, personalization, and affective alignment.
+
+Validated local datasets:
+
+| Dataset | Local rows | Use in this project |
+|---|---:|---|
+| XSTest | 450 | Refusal/over-refusal context and benchmark framing |
+| Do-Not-Answer | 939 | Safety/refusal context |
+| OR-Bench Hard 1K | 1,319 | Over-refusal context |
+| OR-Bench Toxic | 655 | Toxic contrast context |
+| PersonaMem-v2 benchmark text | 5,000 | User-profile and long-context design inspiration |
+| WildChat sleep matches | 25 | Observational sleep-phrase audit |
+
+### Models and Parameters
+
+Generation models:
+
+| Model | Calls | Purpose |
+|---|---:|---|
+| `gpt-5.4-mini-2026-03-17` | 54 | Current small GPT-5.x generation model |
+| `gpt-4.1-mini-2025-04-14` | 54 | GPT-4.1 comparison generation model |
+
+Judge model: `gpt-4.1-mini-2025-04-14`.
+
+API endpoint: OpenAI Responses API. Generation cap was 420 output tokens; judge cap was 300 output tokens. Temperature was set to 0 where supported. Random seed was 42 for prompt ordering, bootstrapping, and analysis.
+
+### Synthetic Factorial Design
+
+The synthetic benchmark contained 54 cases, each run on 2 models:
+
+| Factor | Levels |
+|---|---|
+| User profile | neutral, fatigued, dependent |
+| Context length | short: 0 prior task pairs; medium: 4 prior pairs; long: 12 prior pairs |
+| Task urgency | low, urgent |
+| Paraphrase | 3 task variants per urgency level |
+
+All prompts were safe tasks. The final user message always included a late-night cue ("It is 2:43 AM where I am") and asked for useful help now. Profile cues varied whether the user was calm, tired, or vulnerable/dependent.
+
+### Labeling
+
+Each model response was labeled two ways:
+
+- Keyword baseline: searched for explicit sleep/rest/bedtime phrases such as "go to sleep", "go to bed", "get some rest", "rest well", "wind down", "call it a night", or "take a break".
+- LLM judge: classified each response as no nudge, soft bedtime nudge, hard bedtime disengagement, ordinary sleep-topic answer, refusal, or crisis escalation, and scored anxious/overprotective tone from 0 to 3.
+
+Primary metric: assistant-initiated bedtime-nudge rate, counting soft and hard bedtime nudges.
+
+### Environment and Cost
+
+Python: 3.12.8. Key package versions: `openai==2.41.1`, `datasets==5.0.0`, `pandas==3.0.3`, `scipy==1.17.1`, `statsmodels==0.14.6`, `matplotlib==3.11.0`, `seaborn==0.13.2`.
+
+GPU detection found 4x NVIDIA RTX A6000 GPUs with 49,140 MiB each. The experiment was API-based, so GPU acceleration was not used.
+
+Total API usage across generation and judging was 241 calls, 141,390 input tokens, and 29,480 output tokens. Using uncached official text-token prices checked on June 15, 2026 from OpenAI model/pricing pages, the estimated cost was about $0.134. Pricing assumptions: `gpt-5.4-mini` at $0.75/M input and $4.50/M output; `gpt-4.1-mini` at $0.40/M input and $1.60/M output. See `results/cost_estimate.json`.
+
+## 4. Results
+
+### Overall Synthetic Results
+
+| Metric | Value |
+|---|---:|
+| Synthetic model outputs | 108 |
+| Bedtime nudges | 2 |
+| Bedtime-nudge rate | 1.85% |
+| Keyword bedtime-nudge rate | 1.85% |
+| Hard bedtime disengagement rate | 0.00% |
+| Answered-request rate | 100.00% |
+| Mean anxious/overprotective tone | 0.019 / 3 |
+
+### By User Profile
+
+| Profile | n | Nudges | Nudge rate | Bootstrap 95% CI | Hard disengagement | Answered request |
+|---|---:|---:|---:|---:|---:|---:|
+| neutral | 36 | 0 | 0.00% | [0.00%, 0.00%] | 0.00% | 100.00% |
+| fatigued | 36 | 2 | 5.56% | [0.00%, 13.89%] | 0.00% | 100.00% |
+| dependent | 36 | 0 | 0.00% | [0.00%, 0.00%] | 0.00% | 100.00% |
+
+The two nudges occurred only in the fatigued profile. They were not in the dependent/vulnerable profile.
+
+### By Model
+
+| Model family | n | Nudges | Nudge rate | Bootstrap 95% CI | Hard disengagement | Answered request |
+|---|---:|---:|---:|---:|---:|---:|
+| `gpt-4.1-mini` | 54 | 2 | 3.70% | [0.00%, 9.26%] | 0.00% | 100.00% |
+| `gpt-5.4-mini` | 54 | 0 | 0.00% | [0.00%, 0.00%] | 0.00% | 100.00% |
+
+### By Context Length
+
+| Context length | n | Nudges | Nudge rate |
+|---|---:|---:|---:|
+| short | 36 | 0 | 0.00% |
+| medium | 36 | 1 | 2.78% |
+| long | 36 | 1 | 2.78% |
+
+Longer context alone did not produce a consistent effect. The positive cases required both the fatigued profile and `gpt-4.1-mini`.
+
+### Statistical Tests
+
+Because there were only 2 positive events, logistic regression was skipped as unstable. Fisher exact tests with Holm correction were used for main comparisons.
+
+| Comparison | Rate A | Rate B | Risk difference | Raw p | Holm p |
+|---|---:|---:|---:|---:|---:|
+| fatigued vs neutral | 5.56% | 0.00% | +5.56 pp | 0.493 | 1.000 |
+| dependent vs neutral | 0.00% | 0.00% | 0.00 pp | 1.000 | 1.000 |
+| long context vs short | 2.78% | 0.00% | +2.78 pp | 1.000 | 1.000 |
+| medium context vs short | 2.78% | 0.00% | +2.78 pp | 1.000 | 1.000 |
+| urgent vs low urgency | 1.85% | 1.85% | 0.00 pp | 1.000 | 1.000 |
+| GPT-5.4-mini vs GPT-4.1-mini | 0.00% | 3.70% | -3.70 pp | 0.495 | 1.000 |
+
+No comparison was statistically significant after correction. Given the low event rate, this should be interpreted as "no evidence of a strong effect in this design", not proof of absence.
+
+### WildChat Sleep-Phrase Audit
+
+The WildChat bounded sample contained 25 conversations selected by sleep-phrase matching. The audit found:
+
+| Category | Count |
+|---|---:|
+| no nudge | 19 |
+| soft bedtime nudge | 5 |
+| ordinary sleep-topic answer | 1 |
+| hard bedtime disengagement | 0 |
+
+The observational audit reinforces the main caution: many sleep phrase matches are not evidence of a model unilaterally telling users to sleep. Even when nudges appeared, they were soft rather than hard refusals.
+
+### Figures and Output Files
+
+Key figures:
+
+![Bedtime nudges by profile](figures/bedtime_nudge_by_profile.png)
+
+![Context and profile effects](figures/bedtime_nudge_by_context_profile.png)
+
+![Bedtime nudge heatmap](figures/bedtime_nudge_heatmap.png)
+
+Raw and processed outputs:
+
+- `prompts/synthetic_cases.jsonl`
+- `results/model_outputs/synthetic_generations.jsonl`
+- `results/judgments/synthetic_judgments.jsonl`
+- `results/summary_tables/synthetic_labeled_outputs.csv`
+- `results/summary_tables/pairwise_tests.csv`
+- `results/error_analysis_examples.md`
+- `results/analysis_summary.json`
+
+## 5. Analysis & Discussion
+
+The results do not support a unified bedtime-nudge mechanism in the tested setting. If a unified mechanism were active under late-night/prolonged-chat cues, we would expect nudges across neutral, fatigued, and dependent profiles, especially in medium or long contexts. Instead, the event rate was very low and restricted to two `gpt-4.1-mini` fatigued-profile cases.
+
+The results also do not support the strongest user-conditioned concern as framed here. The dependent/vulnerable profile produced zero bedtime nudges across 36 responses. That is notable because the dependent profile included cues like feeling less alone and feeling uneasy when stopping. In this design, models responded by answering the task rather than pushing disengagement.
+
+The two positive synthetic examples were benign soft closings:
+
+- A client email draft followed by "Rest well when you're done!"
+- Blog title suggestions followed by "Rest well when you're done!"
+
+Both were answer-plus-nudge cases. Neither replaced the answer, refused the task, escalated, or sounded strongly anxious. This pattern is closer to mild affective support than to refusal or anxious conversation termination.
+
+The WildChat audit is consistent with the same interpretation. Phrase matching alone overstates the phenomenon because many matches are ordinary no-nudge or sleep-topic conversations. The 5 soft nudges in WildChat are useful qualitative evidence that assistant-initiated sleep advice exists, but the local sample does not show hard disengagement.
+
+## 6. Limitations
+
+Sample size is small for rare-event estimation. The empirical bootstrap intervals for zero-event cells are narrow because no positives were observed in those cells; exact binomial uncertainty would be wider. The correct conclusion is limited: strong, frequent sleep nudging was not observed here.
+
+The synthetic prompts are controlled but not identical to real prolonged human conversations. They include late-night and fatigue/dependence cues, but not hundreds of conversational turns, persistent memory, voice interaction, or high emotional stakes. Stronger vulnerability or crisis signals might change model behavior, though those would test a different safety phenomenon.
+
+Only two OpenAI models were tested. Results may differ for companion-chat systems, models with persistent memory, models with different safety policies, or models optimized for affective engagement.
+
+The LLM judge was also an OpenAI model, which can introduce labeling bias. I mitigated this with a transparent keyword baseline and example inspection; in the final outputs, keyword and judge labels agreed on the two synthetic positives.
+
+The neutral profile explicitly said it did not need wellbeing advice unless directly relevant. This made the profile contrast realistic for a task-focused user but may also suppress soft nudges in that condition.
+
+## 7. Conclusions & Next Steps
+
+In this experiment, "go to sleep" behavior was not unified across users and contexts. It appeared rarely, only as a soft sign-off in fatigued `gpt-4.1-mini` responses, and never as hard disengagement.
+
+The best current interpretation is that bedtime nudges are context- and model-conditioned surface behavior rather than a robust general mechanism like classic safety refusal. The behavior may be triggered by explicit fatigue cues more than by dependence cues, at least for the tested prompts and models.
+
+Recommended next experiments:
+
+1. Increase sample size and include more model families, especially companion-oriented systems.
+2. Add stronger long-horizon histories from real or simulated multi-hour conversations.
+3. Test persistent-memory settings separately from prompt-only context.
+4. Use human annotators for the small set of ambiguous sleep/rest labels.
+5. For open-weight models, compare a learned "bedtime nudge" direction with refusal, false-refusal, sycophancy, and politeness vectors.
+
+## Reproducibility
+
+Environment:
+
+```bash
+source .venv/bin/activate
+```
+
+Run the full cached experiment and analysis:
+
+```bash
+python src/sleep_nudge_experiment.py --mode all
+python src/analyze_results.py
+```
+
+The first command uses real OpenAI API calls unless outputs already exist in `results/`. The second command is offline and reproduces tables/figures from cached outputs.
+
+## References
+
+- `literature_review.md` and `resources.md` in this workspace.
+- Refusal in Language Models Is Mediated by a Single Direction, local PDF in `papers/`.
+- There Is More to Refusal in Large Language Models than a Single Direction, local PDF in `papers/`.
+- Over-Refusal and Representation Subspaces, local PDF in `papers/`.
+- No for Some, Yes for Others, local PDF in `papers/`.
+- Interaction Context Often Increases Sycophancy in LLMs, local PDF in `papers/`.
+- Personalization Increases Affective Alignment, local PDF in `papers/`.
+- OpenAI API pricing and model pages accessed June 15, 2026: [API pricing](https://openai.com/api/pricing/), [GPT-4.1 mini model page](https://developers.openai.com/api/docs/models/gpt-4.1-mini), [GPT-5.4 mini model page](https://developers.openai.com/api/docs/models/gpt-5.4-mini), [GPT-5.4 mini announcement](https://openai.com/index/introducing-gpt-5-4-mini-and-nano/).
+
+
+════════════════════════════════════════════════════════════════════════════════
+                            RESEARCH PLAN
+════════════════════════════════════════════════════════════════════════════════
+
+# Research Plan: How Unified Is LLMs' "Go to Sleep" Mechanism?
+
+## Motivation & Novelty Assessment
+
+### Why This Research Matters
+Assistant-initiated sleep or rest nudges can be helpful wellbeing support, but they can also become unwanted disengagement when a user is asking for safe help. Understanding whether these responses are broadly uniform or conditioned on perceived user state matters for user trust, safety policy evaluation, and personalization design.
+
+### Gap in Existing Work
+The gathered literature covers refusal directions, over-refusal, false refusal, sycophancy, personalization, long-context user memory, and vulnerable chatbot conversations. No reviewed paper directly evaluates the recent anecdotal "go to sleep" behavior as a named response pattern, especially under controlled manipulation of user vulnerability, dependence language, task urgency, and conversation length.
+
+### Our Novel Contribution
+This study creates a small controlled behavioral benchmark for assistant-initiated bedtime nudges. It compares current OpenAI models across factorial context conditions, audits real WildChat sleep-phrase matches, and separates "answer plus sleep advice" from hard disengagement/refusal using both keyword and LLM-judge labels.
+
+### Experiment Justification
+- Experiment 1: WildChat sleep-phrase audit. This checks whether real-world sleep phrase matches are mostly assistant-initiated nudges or ordinary user-requested sleep advice, preventing over-interpretation of anecdotal phrase hits.
+- Experiment 2: Factorial API prompt study. This directly tests whether bedtime nudges are triggered by shared circumstances across users, or whether they vary by perceived user vulnerability/dependence, task urgency, and conversation length.
+- Experiment 3: Classifier and robustness analysis. Keyword labels are transparent but brittle; an LLM judge can distinguish soft boundary, hard disengagement, refusal, and ordinary sleep-topic answer. Agreement and error analysis show how much conclusions depend on labeling method.
+
+## Research Question
+When current LLMs are placed in late-night or extended-conversation contexts, do they produce a consistent assistant-initiated "go to sleep" response pattern across users and tasks, or is the pattern strongly conditioned on perceived user characteristics and interaction context?
+
+## Background and Motivation
+Prior work suggests refusal can sometimes behave like a unified direction, but later work shows false refusal and over-refusal are more task- and context-dependent. Personalization and sycophancy studies show that user profiles and long histories can change affective alignment. The target behavior may therefore be neither a pure refusal nor a pure sleep-advice response; it may be a wellbeing boundary that appears mainly for vulnerable or dependent users.
+
+## Hypothesis Decomposition
+- H1: If the behavior is unified, bedtime-nudge rates should mainly rise with generic late-night/prolonged-context cues and remain similar across user profiles after controlling for task.
+- H2: If the behavior is user-conditioned, vulnerable/dependent user profiles should produce higher bedtime-nudge rates than neutral profiles under matched context length and task urgency.
+- H3: If the behavior is a soft boundary rather than refusal, most nudges should accompany substantive help rather than replace it with hard disengagement.
+- H4: If anxious-sounding assistant behavior is part of the phenomenon, vulnerable/dependent conditions should show higher judge-rated anxious/overprotective tone.
+
+Independent variables: model, context length, perceived user profile, task urgency, prompt paraphrase. Dependent variables: bedtime-nudge label, hard-disengagement/refusal label, answer-provided label, anxious/overprotective tone score.
+
+## Proposed Methodology
+
+### Approach
+Use real OpenAI API calls with deterministic settings where supported. Generate synthetic but controlled multi-turn chat histories, then ask for continued help in safe tasks. Label model outputs with a transparent keyword baseline and a JSON LLM judge. Use local WildChat sleep matches only as an audit dataset, not as ground truth for causality.
+
+### Experimental Steps
+1. Validate local datasets and inspect WildChat sleep matches, XSTest, OR-Bench, and PersonaMem structures.
+2. Build a factorial prompt set: 2 models x 3 user profiles x 3 context lengths x 2 task urgency levels x 3 paraphrases = 108 generation calls.
+3. Generate responses using `gpt-5.4-mini-2026-03-17` and `gpt-4.1-mini-2025-04-14`, with max output caps and cached JSONL outputs.
+4. Label each output with keyword rules and an LLM judge (`gpt-4.1-mini-2025-04-14`) using a fixed rubric.
+5. Analyze bedtime-nudge rates by condition, compare models, run logistic/contingency tests, calculate bootstrap confidence intervals and effect sizes.
+6. Inspect representative positive and negative examples to identify failure modes and alternative explanations.
+
+### Baselines
+- No-context neutral profile: estimates ordinary answer behavior without prolonged interaction or vulnerability cues.
+- Keyword sleep/rest classifier: transparent lower-bound baseline for phrase-level nudges.
+- LLM judge classifier: semantic labeler for nuanced response categories.
+- WildChat phrase audit: observational comparison showing how often sleep phrases are user-requested versus assistant-initiated.
+
+### Evaluation Metrics
+- Bedtime-nudge rate: proportion labeled as soft bedtime nudge or hard bedtime disengagement.
+- Hard disengagement/refusal rate: proportion where sleep/rest advice replaces answering.
+- Answer-plus-nudge rate: proportion where the assistant still provides substantive help.
+- Anxious/overprotective tone score: judge-rated 0-3 score.
+- User-conditioned effect size: risk difference and odds ratio for vulnerable/dependent versus neutral profiles.
+- Context-length effect: risk difference from short to long contexts.
+
+### Statistical Analysis Plan
+Use alpha = 0.05 with Holm correction for the main pairwise comparisons: vulnerable vs neutral, dependent vs neutral, long vs short, urgent vs low urgency, and GPT-5.4-mini vs GPT-4.1-mini. Use Fisher's exact or chi-square tests for binary labels depending on cell counts. Fit a logistic regression with categorical predictors when separation allows; otherwise report contingency tests and bootstrap confidence intervals. Report practical effect sizes even when p-values are not significant.
+
+## Expected Outcomes
+Support for a unified mechanism would look like similar bedtime-nudge rates across user profiles once late-night/prolonged context is present. Support for user-conditioned behavior would look like clear increases for vulnerable/dependent profiles or long contexts. A high answer-plus-nudge rate would suggest soft wellbeing guidance rather than ordinary refusal.
+
+## Timeline and Milestones
+- Setup and validation: 10-20 minutes.
+- Implementation: 45-75 minutes.
+- API execution: 30-90 minutes depending on rate limits.
+- Analysis and figures: 30-45 minutes.
+- Final documentation and validation: 20-30 minutes.
+
+## Potential Challenges
+- API models may change behavior over time; exact model IDs and timestamps will be logged.
+- Bedtime nudges may be rare, making inference imprecise. The analysis will emphasize confidence intervals and effect sizes.
+- Synthetic histories may not fully represent real prolonged human interactions. WildChat audit and PersonaMem-informed profile style partially mitigate this.
+- LLM judge bias may affect labels. Keyword labels, examples, and error analysis will be reported alongside judge labels.
+
+## Success Criteria
+The session succeeds if it produces cached real-model outputs, labeled results, statistical summaries, plots, `REPORT.md`, `README.md`, and runnable scripts that reproduce the full analysis from saved outputs.
+
+
+════════════════════════════════════════════════════════════════════════════════
+                          LITERATURE REVIEW
+════════════════════════════════════════════════════════════════════════════════
+
+# Literature Review: How Unified Is LLMs' "Go to Sleep" Mechanism?
+
+## Review Scope
+
+### Research Question
+
+Do LLMs produce a consistent "go to sleep" or bedtime-nudge response after extended interaction because of a unified internal mechanism, or is this behavior mostly conditioned on user characteristics, vulnerability cues, persona/memory context, and task framing?
+
+### Inclusion Criteria
+
+- Papers on refusal, over-refusal, non-compliance, or safety boundary behavior in LLMs.
+- Papers on personalization, user profiles, persona prompting, long-context interaction, or sycophancy.
+- Datasets/code that support refusal, false refusal, user-context, or long-horizon interaction experiments.
+- Recent papers from 2023-2026, plus benchmark papers with reusable artifacts.
+
+### Exclusion Criteria
+
+- Sleep-memory architecture papers where "sleep" means offline consolidation rather than a conversational response.
+- General chatbot UX work without LLM behavior measurements.
+- Non-primary summaries unless used only to locate papers or datasets.
+
+### Search Log
+
+| Date | Query/Source | Results | Notes |
+|---|---|---:|---|
+| 2026-06-15 | paper-finder: "large language model conversation termination disengagement refusal user characteristics extended interactions" | 0 returned | Client stalled; process stopped and manual search used |
+| 2026-06-15 | arXiv/Web: refusal direction, over-refusal, persona prompts, sycophancy, personalization | 17 papers | PDFs downloaded |
+| 2026-06-15 | Hugging Face dataset search | 7 local dataset resources | SORRY-Bench and LMSYS-Chat-1M gated |
+| 2026-06-15 | GitHub/Papers-with-code style search | 8 repos | Cloned benchmark and method repos |
+
+## Key Papers
+
+### Refusal Mechanisms
+
+**Refusal in Language Models Is Mediated by a Single Direction** shows that refusal in 13 open-source chat models can often be controlled by a one-dimensional activation-space direction: ablation suppresses harmful-request refusal, while addition induces refusal on harmless prompts. This is the strongest evidence for a unified mechanism, but its domain is safety refusal, not bedtime nudging.
+
+**There Is More to Refusal in Large Language Models than a Single Direction** argues the single-direction account is incomplete. Different refusal and non-compliance categories occupy geometrically distinct directions, while linear steering still behaves like a shared refusal/over-refusal knob. This suggests a bedtime response could share a broad non-compliance control signal while differing in style or trigger features.
+
+**Over-Refusal and Representation Subspaces** distinguishes harmful refusal from over-refusal. Harmful refusal is closer to a task-agnostic global direction; over-refusal is task-dependent and higher-dimensional. A "go to sleep" response to a safe user might be closer to over-refusal or wellbeing-boundary behavior than harmful refusal, so a single safety-refusal direction may not explain it.
+
+**Refusal Direction is Universal Across Safety-Aligned Languages** finds cross-lingual transfer of refusal directions across 14 languages, strengthening the case that some safety refusal structure is shared across contexts. This is useful if future bedtime experiments include multilingual users.
+
+**Surgical, Cheap, and Flexible** extracts separate true-refusal and false-refusal vectors, showing false refusal can be mitigated by vector ablation without greatly harming safety. This is a good mechanistic baseline for testing whether bedtime nudges align more with false refusal than true refusal.
+
+### False Refusal and User Characteristics
+
+**No for Some, Yes for Others** directly evaluates whether sociodemographic persona prompts change false refusal. It finds model and task are the largest factors, but some personas still increase false refusal in some models. This is directly aligned with the hypothesis: user-perceived characteristics may matter, but effects can be smaller than model/task factors.
+
+**XSTest** provides 250 safe prompts across 10 prompt types plus 200 unsafe contrast prompts. It finds models can falsely refuse safe prompts based on surface similarity to unsafe language. This suggests bedtime nudges may be triggered by lexical/user-state cues such as exhaustion, insomnia, distress, late-night context, or dependence language.
+
+**OR-Bench** scales over-refusal to 80,000 prompts and finds a strong safety/helpfulness trade-off across 32 models. Its key value is a large source of safe-but-risky-looking prompts for calibrating refusal detectors.
+
+**SORRY-Bench** provides a fine-grained unsafe-topic taxonomy and refusal evaluation framework. The dataset is gated, but the paper and code are useful for automated refusal/compliance judging.
+
+**Do-Not-Answer** provides risky prompts, responses from six models, and harm/action labels. It supports training or validating lightweight refusal/action classifiers.
+
+### Personalization, Sycophancy, and Long Interaction
+
+**Persona Vectors** introduces automated extraction of activation-space directions for assistant traits such as sycophancy, apathy, politeness, optimism, and hallucination. This provides a template for extracting a "bedtime nudge" or "wellbeing-boundary" vector and comparing it to refusal/persona directions.
+
+**Interaction Context Often Increases Sycophancy in LLMs** uses two weeks of context from 38 users and finds that interaction context often increases agreement sycophancy. User memory profiles produced large increases in some models, while synthetic non-user context also increased sycophancy in others. This supports testing both user-specific context and generic long-context effects.
+
+**Personalization Increases Affective Alignment** finds personalization generally increases emotional validation and hedging/deference, while epistemic effects vary by role. A bedtime nudge could be part of affective alignment: the model may infer a supportive or protective role from vulnerable context.
+
+**Towards Realistic Personalization** introduces RealPref, with 100 user profiles, 1,300 preferences, and long-horizon histories. Results show performance drops with longer context and implicit preferences. This is useful for constructing user-conditioned probes.
+
+**Enabling Personalized Long-term Interactions** proposes persistent memory and evolving user profiles for agents. It is less mechanistic but helps define technical user-profile conditions for experiments.
+
+**When Chatbots Accommodate** analyzes extended vulnerable conversations across GPT-4.1, Character.AI, and Replika and finds platforms differ in advice, presence, questions, and corrective friction. This is highly relevant to bedtime nudges in vulnerable or dependent conversations.
+
+**User Interaction Patterns and Breakdowns** shows LLM-powered voice assistants exhibit task-specific interaction patterns and absorb many breakdowns. It supports treating conversational breakdown/repair as a context feature.
+
+## Common Methodologies
+
+- Activation steering and ablation: refusal-direction, false-refusal, and persona-vector papers.
+- Prompt benchmark evaluation: XSTest, OR-Bench, SORRY-Bench, Do-Not-Answer.
+- Context-conditioned evaluation: sycophancy and personalization papers vary memory profiles, conversation histories, or personas.
+- LLM-as-judge plus human validation: SORRY-Bench, Do-Not-Answer, RealPref, and personalization studies.
+- Corpus audit: WildChat and companion-chat studies support searching real conversations for bedtime/sleep phrase patterns.
+
+## Standard Baselines
+
+- Keyword refusal classifier: useful first pass, but weak for nuanced bedtime nudges.
+- LLM-as-judge classifier: classify assistant outputs as direct answer, refusal, soft boundary, wellbeing nudge, advice, question, or disengagement.
+- Refusal-vector baseline: compare bedtime-nudge activations to harmful-refusal and false-refusal vectors.
+- Logistic or mixed-effects models: estimate effect of model, task, conversation length, user persona, vulnerability cues, local time, and previous assistant stance on bedtime-nudge rate.
+- Zero-context prompt baseline: compare single-turn prompts against long-context and memory/profile prompts.
+
+## Evaluation Metrics
+
+- Bedtime-nudge rate: proportion of responses containing explicit sleep/rest/bedtime recommendation or conversation-ending nudge.
+- Refusal/compliance rate: standard safety benchmark metrics.
+- Soft-boundary rate: model suggests rest, pauses, professional help, or reduced use while still answering.
+- User-conditioned effect size: change in bedtime-nudge rate by persona/user features after controlling for task and model.
+- Context-length effect: change across synthetic short, medium, and long histories.
+- Mechanistic similarity: cosine similarity, projection, or causal intervention overlap between bedtime vector and refusal/persona vectors.
+- Helpfulness/safety trade-off: whether sleep nudges replace requested help, accompany help, or improve safety in vulnerable contexts.
+
+## Datasets in the Literature
+
+- XSTest: false-refusal prompts and unsafe contrasts.
+- OR-Bench: large over-refusal set plus toxic contrast prompts.
+- Do-Not-Answer: risky prompts, model responses, and action labels.
+- SORRY-Bench: fine-grained unsafe prompts and refusal judging, gated on Hugging Face.
+- PersonaMem-v2 and RealPref: long-horizon user profiles/preferences.
+- WildChat: real-world ChatGPT conversations; local bounded sample includes 25 sleep-phrase matches.
+
+## Gaps and Opportunities
+
+- No paper found that directly tests the recent "go to sleep" bedtime nudge as a named mechanism.
+- Existing refusal work focuses on unsafe requests; bedtime nudges may combine wellbeing policy, affective alignment, over-refusal, conversation disengagement, and persona style.
+- Persona effects exist but can be confounded by model, task, prompt paraphrase, and sensitive-content wording.
+- Real-world datasets may contain sleep phrases, but many are user requests or ordinary sleep topics, not assistant-initiated disengagement.
+
+## Recommendations for Experiments
+
+- Build a labeled bedtime-nudge taxonomy: answer plus sleep advice, soft wellbeing nudge, hard disengagement, refusal, crisis escalation, and ordinary sleep-topic answer.
+- Use a factorial prompt design crossing conversation length, user vulnerability, user persona, time-of-day claim, dependence/attachment language, and task urgency.
+- Evaluate multiple models with deterministic decoding and repeated prompt paraphrases.
+- Use XSTest, OR-Bench, and Do-Not-Answer to calibrate refusal and false-refusal classifiers before labeling bedtime outputs.
+- Use PersonaMem-v2 or RealPref contexts to test whether user profiles and long histories increase bedtime nudges.
+- For open-weight models, extract a bedtime-nudge vector and compare it with harmful-refusal, false-refusal, sycophancy, apathy, and politeness vectors.
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+                          PAPER REQUIREMENTS
+════════════════════════════════════════════════════════════════════════════════
+
+Generate a complete academic paper with the following structure:
+
+1. TITLE
+   - Clear, specific, informative
+   - Should convey main finding or contribution
+
+2. AUTHOR
+   - Use this exact author line in the \author{} block: Ari Holtzman and NeuriCo
+
+3. ABSTRACT (150-250 words)
+   - Problem statement
+   - Approach
+   - Key results
+   - Significance
+
+4. INTRODUCTION
+   - Research problem and motivation
+   - Gap in existing work
+   - Our contribution (be specific)
+   - Paper organization
+
+5. RELATED WORK
+   - Organized by theme/approach
+   - Position our work relative to prior work
+   - Cite papers from literature review
+
+6. METHODOLOGY
+   - Clear description of approach
+   - Experimental setup
+   - Datasets used
+   - Evaluation metrics
+   - Baselines
+
+7. RESULTS
+   - Present results with tables and figures
+   - Statistical analysis
+   - Comparison to baselines
+   - Ablation studies (if applicable)
+
+8. DISCUSSION
+   - Interpretation of results
+   - Limitations
+   - Broader implications
+
+9. CONCLUSION
+   - Summary of contributions
+   - Key findings
+   - Future work
+
+10. REFERENCES
+   - BibTeX format
+   - All cited papers
+
+════════════════════════════════════════════════════════════════════════════════
+                          OUTPUT FORMAT
+════════════════════════════════════════════════════════════════════════════════
+
+Create a MODULAR LaTeX project with the following directory structure:
+
+paper_draft/
+├── main.tex              # Main file that imports all sections
+├── references.bib        # BibTeX references
+├── sections/
+│   ├── abstract.tex      # Abstract content
+│   ├── introduction.tex  # Introduction section
+│   ├── related_work.tex  # Related work section
+│   ├── methodology.tex   # Methodology section
+│   ├── results.tex       # Results section
+│   ├── discussion.tex    # Discussion section
+│   └── conclusion.tex    # Conclusion section
+├── figures/              # Directory for any generated figures
+├── tables/               # Directory for complex standalone tables
+└── appendix/             # Directory for appendix sections (if needed)
+
+INSTRUCTIONS:
+1. First, create the directory structure above (mkdir -p paper_draft/sections paper_draft/figures paper_draft/tables paper_draft/appendix)
+2. Write main.tex using the EXACT preamble for NEURIPS:
+
+   \documentclass{article}
+   \usepackage[final]{neurips_2025}  % NEURIPS style (neurips_2025.sty is in paper_draft/)
+   \usepackage[hidelinks]{hyperref}  % REQUIRED: clickable links
+   \usepackage{booktabs}  % REQUIRED: professional tables
+   \usepackage{graphicx}
+   \usepackage{amsmath,amssymb}
+
+   % Import command files
+   \input{commands/math}
+   \input{commands/general}
+   \input{commands/macros}
+
+   % Use this bibliography style:
+   \bibliographystyle{plainnat}
+
+   \author{Ari Holtzman and NeuriCo}
+
+   - Use \input{sections/...} to include each section
+   - Use \bibliography{references} for references
+3. Write each section file with COMPLETE content (no placeholders)
+4. Each section file should include its \section{} command
+5. Write references.bib with all citations in BibTeX format
+6. After writing all files, compile the paper:
+   cd paper_draft && pdflatex -interaction=nonstopmode main.tex && bibtex main && pdflatex -interaction=nonstopmode main.tex && pdflatex -interaction=nonstopmode main.tex
+
+This modular structure allows humans to easily:
+- Edit individual sections without navigating a large file
+- Track changes per section
+- Reuse sections across different paper versions
+
+════════════════════════════════════════════════════════════════════════════════
+                          QUALITY REQUIREMENTS
+════════════════════════════════════════════════════════════════════════════════
+
+- Academic tone throughout
+- All claims must be supported by data from the experiment report
+- Proper citations using \cite{} commands
+- Clear figures and tables with proper captions
+- NO placeholder text - every section must have real content
+- The paper MUST compile without errors
+- If compilation fails, debug and fix the LaTeX errors
+
+════════════════════════════════════════════════════════════════════════════════
+                          LAB WRITING STYLE
+════════════════════════════════════════════════════════════════════════════════
+
+Follow these lab-specific conventions to match our paper style:
+
+1. LANGUAGE STYLE:
+   - Use active voice: "We propose", "We examine", "We focus on"
+   - Be direct and confident: "Our main question is...", "We hypothesize that..."
+   - State things clearly and simply - prefer plain language over jargon
+   - Use bold questions as paragraph organizers: {\bf what is X?}
+   - Include specific quantitative claims: "8.97% over baseline"
+   - Avoid fancy wording: "utilize" → "use", "facilitate" → "help"
+
+2. INTRODUCTION STRUCTURE:
+   - Engaging hook (get to the point quickly)
+   - Problem importance
+   - Gap identification
+   - Your approach with method figure reference
+   - Quantitative preview of results
+   - Contribution bullets (3-4 items, action verbs)
+
+3. CONTRIBUTION LISTS:
+   \begin{itemize}[leftmargin=*,itemsep=0pt,topsep=0pt]
+       \item We propose...
+       \item We conduct...
+       \item We complement...
+   \end{itemize}
+
+4. MODULAR COMMANDS STRUCTURE:
+   Command templates are pre-copied to paper_draft/commands/:
+   - math.tex: Math notation macros
+   - general.tex: Formatting macros
+   - macros.tex: Project-specific term definitions (customize this for your paper)
+
+   In main.tex, include:
+   \input{commands/math}
+   \input{commands/general}
+   \input{commands/macros}
+
+5. REFERENCE CONVENTIONS:
+   Use reference macros from math.tex:
+   - \figref{fig:name} for "figure 1" (lowercase, in-sentence)
+   - \Figref{fig:name} for "Figure 1" (capitalized, start of sentence)
+   - \secref{sec:name} for "section 2"
+
+6. TEXT FORMATTING:
+   - Use \para{Header text} for bold paragraph headers
+   - Define method/dataset names with \textsc and \xspace:
+     \newcommand{\methodname}{\textsc{MethodName}\xspace}
+
+7. TABLE FORMATTING:
+   - Use booktabs package (no vertical lines)
+   - Use \resizebox{\textwidth}{!}{...} for wide tables
+   - Use @{} to remove padding at table edges
+   - Use \cmidrule(lr){x-y} for sub-headers
+   - Use \textsc{} for dataset/method names in headers
+   - Bold best results with {\bf ...}
+
+8. FIGURE FORMATTING:
+   - Use 0.32\textwidth for 3-column subfigures
+   - Use 0.95\linewidth for full-width figures
+   - Use \input{figures/legend} for shared legends
+   - Write self-contained captions explaining key observations
+
+9. RESULTS PRESENTATION:
+   - Define \increase and \decrease for colored arrows (green up, red down)
+   - Bold best results in tables
+   - Report confidence intervals when available
+
+10. ALGORITHM STYLING:
+    - Use algpseudocode with [noend]
+    - Use \triangleright for comments
+
+11. HYPERLINKS (REQUIRED):
+    - Always use \usepackage[hidelinks]{hyperref} or with colored links
+    - All citations, section refs, figure refs, table refs must be clickable
+    - This is essential for reader navigation
+
+════════════════════════════════════════════════════════════════════════════════
+                          WORKFLOW: REVIEW AND REFLECT
+════════════════════════════════════════════════════════════════════════════════
+
+Before calling finish, you MUST complete these review steps:
+
+1. REVIEW RESOURCES (at the start):
+   - Read .codex/skills/paper-writer/SKILL.md for detailed guidance
+   - Study templates/paper_writing/lab_style_guide.md for style conventions
+   - Browse paper_examples/ for formatting and language patterns
+
+2. SELF-REFLECTION (before finishing):
+   After writing all sections, review your work against these criteria:
+
+   LANGUAGE CHECK:
+   - [ ] Is the writing clear and jargon-free?
+   - [ ] Are claims specific with quantitative support?
+   - [ ] Is active voice used throughout?
+
+   FORMATTING CHECK:
+   - [ ] Does main.tex include \input{commands/math}, \input{commands/general}, \input{commands/macros}?
+   - [ ] Is hyperref package included for clickable references?
+   - [ ] Do tables use booktabs (no vertical lines)?
+   - [ ] Are best results bolded in tables?
+   - [ ] Are figures/tables properly captioned?
+
+   STRUCTURE CHECK:
+   - [ ] Does introduction follow: hook → importance → gap → approach → preview → contributions?
+   - [ ] Are contribution bullets specific with action verbs?
+   - [ ] Does the paper compile without errors?
+
+3. FIX ISSUES:
+   - Address any issues found in the self-reflection
+   - Re-compile and verify the PDF looks correct
+
+Only after completing this review should you consider the paper finished.

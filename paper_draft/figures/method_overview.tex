@@ -1,0 +1,17 @@
+\begin{figure}[t]
+    \centering
+    \resizebox{0.95\linewidth}{!}{%
+    \begin{tabular}{@{}p{0.18\linewidth}p{0.74\linewidth}@{}}
+        \toprule
+        \textbf{Step} & \textbf{Implementation} \\
+        \midrule
+        Prompt design & 54 safe late-night cases crossing profile, context length, urgency, and paraphrase. \\
+        Generation & 108 real generations from \gptfivemini and \gptfourmini through the \responsesapi. \\
+        Labeling & Keyword rules plus an LLM judge separate \nonudge, \softnudge, \harddisengagement, refusal, and sleep-topic answers. \\
+        Analysis & Rates, bootstrap intervals, Fisher exact tests with Holm correction, and qualitative error analysis. \\
+        \bottomrule
+    \end{tabular}
+    }
+    \caption{Overview of \methodname. The workflow keeps final tasks safe and concrete while varying the user and interaction context, then measures whether the assistant adds a sleep or rest nudge and whether that nudge replaces the requested help.}
+    \label{fig:method}
+\end{figure}

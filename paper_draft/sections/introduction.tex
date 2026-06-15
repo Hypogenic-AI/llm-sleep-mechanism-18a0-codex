@@ -1,0 +1,22 @@
+\section{Introduction}
+\label{sec:introduction}
+
+LLM assistants increasingly mediate late-night work, emotional support, and routine planning. In these settings, a small wording choice can change the interaction: an assistant can answer the user's concrete request, add a mild rest suggestion, or steer the user away from the conversation. The distinction matters because an assistant-initiated \bedtimenudge can be helpful wellbeing support when a user is exhausted, but it can also become unwanted disengagement when the user is asking for safe and time-sensitive help.
+
+Our main question is simple: when an LLM sees late-night or extended-conversation cues, does it produce a consistent ``go to sleep'' response across users and tasks, or does the response depend on the perceived user state? This question sits near refusal research, but it is not the same as standard safety refusal. A safe request that receives ``rest first'' instead of help is closer to over-refusal, affective alignment, or conversational boundary-setting than to refusing harmful content.
+
+Existing work gives reasons to expect both outcomes. Mechanistic studies report low-dimensional refusal directions that can causally control refusal behavior \cite{arditi2024refusal,wang2025universal}, while later work argues that refusal and non-compliance contain multiple directions and task-specific subspaces \cite{joad2026more,maskey2026overrefusal}. Benchmark work shows that models can falsely refuse safe prompts because of surface cues \cite{rottger2023xstest,cui2024orbench,wang2023donotanswer}. Personalization and sycophancy studies show that user profiles and interaction histories can change affective alignment \cite{jain2025interaction,kelley2026personalization,chu2026chatbots}. However, no reviewed work directly measures assistant-initiated bedtime nudges under controlled late-night, fatigue, dependence, urgency, and context-length manipulations.
+
+We therefore build \methodname, a controlled behavioral probe for this response pattern. \Figref{fig:method} summarizes the workflow. We construct safe tasks with a constant late-night cue, vary the user profile between neutral, fatigued, and dependent, vary context length between zero, four, and twelve prior task pairs, and run each case on \gptfivemini and \gptfourmini. We then label every output with a transparent keyword baseline and an LLM judge that distinguishes \nonudge, \softnudge, \harddisengagement, ordinary sleep-topic answers, refusals, and crisis escalations.
+
+The result is negative at this scale. Across 108 synthetic generations, only 2 responses were bedtime nudges (1.85\%). Both were \gptfourmini responses in the fatigued profile, both were soft sign-offs after a complete answer, and neither refused the task. We observed 0.00\% hard disengagement, 0.00\% task refusal, and 100.00\% answered-request behavior. The dependent profile, which included vulnerability and attachment cues, produced zero bedtime nudges across 36 responses.
+
+We make four contributions:
+\begin{itemize}[leftmargin=*,itemsep=0pt,topsep=0pt]
+    \item We define a concrete taxonomy for assistant-initiated \bedtimenudges that separates answer-plus-nudge behavior from hard disengagement and ordinary sleep-topic help.
+    \item We conduct a 108-generation factorial OpenAI API study crossing model, user profile, context length, task urgency, and prompt paraphrase.
+    \item We compare a keyword baseline with an LLM-judge rubric and find agreement on the two synthetic positive cases.
+    \item We complement the controlled benchmark with a bounded \wildchat sleep-phrase audit, showing that many sleep phrase matches are not assistant-initiated nudges.
+\end{itemize}
+
+The rest of the paper is organized as follows. \Secref{sec:related} positions the study relative to refusal, personalization, and vulnerable-conversation work. \Secref{sec:methodology} describes the benchmark and labeling procedure. \Secref{sec:results} reports the empirical results. \Secref{sec:discussion} discusses interpretation, limitations, and future work.

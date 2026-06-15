@@ -1,0 +1,26 @@
+idea:
+  title: How unified is LLMs 'go to sleep' mechanism?
+  domain: artificial_intelligence
+  hypothesis: 'Large language models (LLMs) may exhibit a consistent "go to sleep"
+    response pattern after extended interactions, but it is unclear whether this behavior
+    is generally triggered by similar circumstances or is more closely conditioned
+    on the perceived characteristics of the user.
+
+    '
+  background:
+    description: 'There are anecdotal reports of LLMs telling users to "go to sleep"
+      after prolonged conversations, sometimes expressing anxious-sounding responses.
+      This raises the question of whether such responses are unified across users
+      and contexts, or if LLMs adapt this behavior based on their perception of the
+      user.
+
+      '
+  metadata:
+    author: Ari Holtzman
+    source: IdeaHub
+    source_url: https://hypogenic.ai/ideahub/idea/MAHPla7CPVCTGxl0x4ZW
+    idea_id: how_unified_is_llms__go_to_sle_20260615_200728_c9e92767
+    created_at: '2026-06-15T20:07:28.525522'
+    status: submitted
+    github_repo_name: llm-sleep-mechanism-18a0-codex
+    github_repo_url: https://github.com/Hypogenic-AI/llm-sleep-mechanism-18a0-codex
